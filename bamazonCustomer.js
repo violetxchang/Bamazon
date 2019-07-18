@@ -15,35 +15,21 @@ var connection = mysql.createConnection({
   database: "bamazonDB"
 });
 
-connection.connect(function(err) {
+connection.connect(function (err) {
   if (err) throw err;
-  buyProduct();
-  console.log("connected as id " + connection.threadId);
+  bamazonInit();
+  // console.log("connected as id " + connection.threadId);
   connection.end();
 });
 
-function buyProduct(){
-  inquirer
-  .prompt({
-    name: "buy",
-    type: "list",
-    message: "What would you like to buy?",
-    choices: [
-      "Hydrating Moisturizer",
-      "Soothing Moisturizer",
-      "Enriched Body Lotion",
-      "Clear Quartz Luminizer",
-      "Amethyst Luminizer",
-      "Noni Glow Face Oil",
-      "Noni Radiant Eye Oil",
-      "Body Exfoliator",
-      "Noni Glow Sleeping Mask",
-      "Turmeric Brightening Mask"
-    ]
-  })
-  .then(function(answer){
-    switch(answer.action){
-
+function bamazonInit() {
+  connection.query("SELECT * FROM bamazonDB.products", function (err, res) {
+    if (err) throw err;
+    console.log("-------------------------------Welcome to Bamazon-------------------------------");
+    for (var i = 0; i < res.length; i++) {
+console.log("Item ID: ", res[i].item_id, " • ", "Product Name: ", res[i].product_name, " • ", "Price: ", res[i].price)
+console.log("-----------------------------------------------------------------------------")
     }
+    console.log("-----------------------------------------------------------------------------")
   })
 }
