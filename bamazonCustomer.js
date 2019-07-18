@@ -1,5 +1,5 @@
 var mysql = require("mysql");
-// var inquirer = require("inquirer");
+var inquirer = require("inquirer");
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -33,3 +33,22 @@ console.log("-------------------------------------------------------------------
     console.log("-----------------------------------------------------------------------------")
   })
 }
+buySomething();
+
+function buySomething(){
+  inquirer.prompt([{
+    type: "input",
+    name: "id",
+    message: "What is the ID of the item you would like to buy?"
+  },
+  {
+    type: "input",
+    name: "quantity",
+    message: "How many would you like to buy?"
+  }
+]).then(function(res){
+  var itemId = res.id;
+  var itemQuantity = res.quantity;
+  itemTotal(itemId, itemQuantity)
+});
+};
