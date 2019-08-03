@@ -19,7 +19,7 @@ connection.connect(function (err) {
   if (err) throw err;
   bamazonInit();
   // console.log("connected as id " + connection.threadId);
-  connection.end();
+  //connection.end();
 });
 
 function bamazonInit() {
@@ -54,23 +54,20 @@ function buySomething() {
 };
 
 function itemTotal(id, currentStock) {
-  connection.query("SELECT * FROM Products WHERE item_id=" + id, function (err) {
+  connection.query("SELECT * FROM Products WHERE item_id=" + id, function (err, data) {
     if (err) throw err;
 
     if (currentStock <= data[0].stock_quantity) {
       var total = data[0].price * currentStock;
-      console.log("Thank you, your total is" + total);
-      connection.query("UPDATE Products SET stock_quantity = stock_quantity - " + currentStock + "WHERE item_id = " + id);
-
-      // connection.query("SELECT * FROM Departments", function (err, res) {
-      //   if (err) throw err;
-      //   var name;
-      //   for (var i = 0; i < res.length; i++) {
-      //     if (res[i].department_name === id.department_name) {
-      //       name = i;
-      //     }
-      //   }
-      // })
+    
+      var newStock = data[0].stock_quantity - currentStock
+      var query = ("UPDATE Products SET stock_quantity = " + newStock + " WHERE item_id = " + id);
+      //console.log(query)
+      connection.query(query, function (err, res) {
+        if (err) throw err;
+        //console.log(res)
+        console.log("Thank you, your total is " + total);
+      })
     } else {
       console.log("Sorry, insufficient quantity!")
     }
