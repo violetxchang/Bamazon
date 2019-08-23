@@ -53,13 +53,14 @@ function buySomething() {
   });
 };
 
+
 function itemTotal(id, currentStock) {
   connection.query("SELECT * FROM Products WHERE item_id=" + id, function (err, data) {
     if (err) throw err;
 
     if (currentStock <= data[0].stock_quantity) {
       var total = data[0].price * currentStock;
-    
+
       var newStock = data[0].stock_quantity - currentStock
       var query = ("UPDATE Products SET stock_quantity = " + newStock + " WHERE item_id = " + id);
       //console.log(query)
@@ -67,10 +68,26 @@ function itemTotal(id, currentStock) {
         if (err) throw err;
         //console.log(res)
         console.log("Thank you, your total is " + total);
+        buyMore()
+
       })
     } else {
       console.log("Sorry, insufficient quantity!")
-    }
-    bamazonInit();
+      buyMore()
+    };
   });
+
+  function buyMore() {
+    inquirer.prompt([{
+      type: "confirm",
+      name: "buyMore",
+      message: "Would you like to buy something else?"
+    }]).then(function confirmed() {
+      bamazonInit();
+    }, function cancelled() {
+      console.log("Thanks for stopping by. Have a great day!")
+    });
+  };
+  console.log("-----------------------------------------------------------------------------")
+
 };
