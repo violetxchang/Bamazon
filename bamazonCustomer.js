@@ -73,7 +73,7 @@ function itemTotal(id, currentStock) {
       })
     } else {
       console.log("Sorry, insufficient quantity!")
-      buyMore()
+      buyMore();
     };
   });
 
@@ -82,10 +82,14 @@ function itemTotal(id, currentStock) {
       type: "confirm",
       name: "buyMore",
       message: "Would you like to buy something else?"
-    }]).then(function confirmed() {
-      bamazonInit();
-    }, function cancelled() {
-      console.log("Thanks for stopping by. Have a great day!")
+    }]).then(function(userInput) {
+      // console.log(userInput.buyMore);
+   if(userInput.buyMore===true){
+     bamazonInit();
+  } else {
+    console.log("Thank you, please come again!");
+    connection.end()
+  }
     });
   };
   console.log("-----------------------------------------------------------------------------")
